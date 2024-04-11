@@ -30,7 +30,20 @@ void Vector_push_back(Vector* vec, const char* str) {
     vec->size++;
 }
 
-const char* Vector_at(Vector* vec, size_t index) {
+int Vector_search(Vector* vec, const char* str) {
+    for (size_t i = 0; i < vec->size; i++) {
+        if (strcmp(vec->data[i], str) == 0) {
+            return 1; // Found
+        }
+    }
+    return 0; // Not found
+}
+
+int Vector_size(Vector* vec) {
+    return vec->size;
+}
+
+const char* Vector_at(Vector* vec, int index) {
     if (index >= vec->size) {
         fprintf(stderr, "Index out of bounds\n");
         exit(EXIT_FAILURE);
@@ -49,6 +62,7 @@ void Vector_pop_back(Vector* vec) {
     }
 }
 
+
 void Vector_free(Vector* vec) {
     for (size_t i = 0; i < vec->size; i++) {
         free(vec->data[i]);
@@ -57,21 +71,6 @@ void Vector_free(Vector* vec) {
     vec->data = NULL;
     vec->size = 0;
     vec->capacity = 0;
-}
-
-void Vector_erase_value(Vector* vec, const char* value) {
-    size_t index = 0;
-    while (index < vec->size && strcmp(Vector_at(vec, index), value) != 0) {
-        index++;
-    }
-    if (index == vec->size) {
-        fprintf(stderr, "Value not found in the vector\n");
-        return;
-    }
-    for (size_t i = index; i < vec->size - 1; i++) {
-        strcpy(vec->data[i], vec->data[i + 1]);
-    }
-    vec->size--;
 }
 
 // int main() {
