@@ -20,5 +20,3 @@ void stack_insert(list *l,int d);
 void stack_delete1(list *l);
 int stack_isemptyl(list l);
 void stack_display(stack s);
-
-
