@@ -9,6 +9,7 @@ void Init_vector(Vector* vec) {
     vec->data = NULL;
     vec->size = 0;
     vec->capacity = 0;
+    
 }
 
 void Vector_push_back(Vector* vec, const char* str) {
