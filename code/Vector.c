@@ -1,88 +1,93 @@
 # include <stdio.h>
 # include <stdlib.h>
+# include <string.h>
 # include "Vector.h"
 
+#define INITIAL_CAPACITY 10
+
 void Init_vector(Vector* vec) {
-    vec->array = NULL;
+    vec->data = NULL;
     vec->size = 0;
     vec->capacity = 0;
+    
 }
 
-
-void Vector_push_back(Vector* vec, int value) {
-
+void Vector_push_back(Vector* vec, const char* str) {
     if (vec->size >= vec->capacity) {
-        vec->capacity = (vec->capacity == 0) ? 1 : vec->capacity * 2; 
-        vec->array = realloc(vec->array, vec->capacity * sizeof(int)); 
+        vec->capacity = (vec->capacity == 0) ? 1 : vec->capacity * 2;
+        vec->data = realloc(vec->data, vec->capacity * sizeof(char*));
+        if (vec->data == NULL) {
+            fprintf(stderr, "Memory allocation failed\n");
+            exit(EXIT_FAILURE);
+        }
     }
-    
 
-    vec->array[vec->size] = value;
+    vec->data[vec->size] = strdup(str); 
+    if (vec->data[vec->size] == NULL) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
     vec->size++;
 }
 
-
-void Vector_pop_back(Vector* vec) {
-    if (vec->size > 0) {
-        vec->size--;
-    }
-}
-
-
-int Vector_at(Vector* vec, size_t index) {
+const char* Vector_at(Vector* vec, size_t index) {
     if (index >= vec->size) {
         fprintf(stderr, "Index out of bounds\n");
         exit(EXIT_FAILURE);
     }
-    return vec->array[index];
+    return vec->data[index];
 }
-
 
 int Vector_isempty(Vector* vec) {
     return vec->size == 0;
 }
 
+void Vector_pop_back(Vector* vec) {
+    if (vec->size > 0) {
+        free(vec->data[vec->size - 1]);
+        vec->size--;
+    }
+}
 
 void Vector_free(Vector* vec) {
-    free(vec->array);
-    vec->array = NULL;
+    for (size_t i = 0; i < vec->size; i++) {
+        free(vec->data[i]);
+    }
+    free(vec->data);
+    vec->data = NULL;
     vec->size = 0;
     vec->capacity = 0;
 }
 
 // int main() {
-//     Vector my_vector;
-//     Init_vector(&my_vector);
+//     Vector vec;
+//     Init_vector(&vec);
 
-//     // Push some elements to the vector
-//     Vector_push_back(&my_vector, 10);
-//     Vector_push_back(&my_vector, 20);
-//     Vector_push_back(&my_vector, 30);
+//     Vector_push_back(&vec, "Hello");
+//     Vector_push_back(&vec, "World");
+//     Vector_push_back(&vec, "!");
 
-//     // Access and print elements
-//     for (size_t i = 0; i < my_vector.size; i++) {
-//         printf("%d ", Vector_at(&my_vector, i));
+//     for (size_t i = 0; i < vec.size; i++) {
+//         printf("%s ", Vector_at(&vec, i));
 //     }
 //     printf("\n");
 
-//     // Pop an element from the vector
-//     Vector_pop_back(&my_vector);
+//     Vector_pop_back(&vec);
 
-//     // Print the vector after popping
-//     for (size_t i = 0; i < my_vector.size; i++) {
-//         printf("%d ", Vector_at(&my_vector, i));
+//     for (size_t i = 0; i < vec.size; i++) {
+//         printf("%s ", Vector_at(&vec, i));
 //     }
 //     printf("\n");
 
 //     // Check if the vector is empty
-//     if (Vector_isempty(&my_vector)) {
+//     if (Vector_isempty(&vec)) {
 //         printf("Vector is empty\n");
 //     } else {
 //         printf("Vector is not empty\n");
 //     }
 
 //     // Free the memory
-//     Vector_free(&my_vector);
+//     Vector_free(&vec);
 
 //     return 0;
 // }
