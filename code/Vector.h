@@ -17,5 +17,6 @@ int Vector_isempty(Vector* vec);
 void Vector_free(Vector* vec);
 int Vector_search(Vector* vec, const char* str);
 int Vector_size(Vector* vec);
+void Vector_erase_value(Vector* vec, const char* value);
 
 #endif
