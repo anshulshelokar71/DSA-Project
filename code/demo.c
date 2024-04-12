@@ -2,7 +2,10 @@
 # include <stdlib.h>
 # include <string.h>
 # include "Vector.h"
+# include "Map_String.h"
 
+char username[10] = "Tejas";
+char password[10] = "Sanika";
 
 Vector teacher_username;
 Vector teacher_password;
@@ -12,150 +15,11 @@ Vector attendence_date;
 Vector attend_student;
 Vector performance;
 Vector per_student;
+Map *individual;
 
 
 
 
-void admin_createAccount() {
-
-    printf("Enter your choice :\n");
-    printf("1. create teacher account :\n");
-    printf("2. create student account :\n");
-    int num;
-    scanf("%d", &num);
-    if(num==1)
-        teacheraccount();
-    else if(num==2)
-        studentaccount();
-
-    printf("press 1 to create another account and 0 to continue \n");
-
-    int v;
-    scanf("%d", &v);
-    if(v==1)
-        createAccount();
-}
-
-
-void admin_deleteAccount() {
-
-    printf("1. delete teacher account :\n");
-    printf("2. delete student account :\n");
-    int num;
-    scanf("%d", &num);
-    if(num==1)
-        del_teacheraccount();
-    else if(num==2)
-        del_studentaccount();
-
-}
-
-
-void admin_seePerformance() {
-    printf("1.individual performance \n");
-    printf("2.collectively performance \n");
-
-    int num;
-    scanf("%d", &num);
-    
-    if(num==1) {
-        printf("Enter student name : ");
-        char s[30];
-        scanf("%s", s);
-        printf("Performance is : ");
-        // printf("%s", ) print performance from map
-
-    } else if(num==2) {
-        printf("Sudent -> Performance\n");
-        //print performances from for loop
-    }
-}
-
-
-
-
-
-
-
-
-void teacher_givePerformance() {
-    printf("Enter student name : ");
-    char s[30];
-    scanf("%s", s);
-
-    if(Vector_search(&student_username, s)) {
-        printf("Enter performance : ");
-        char s2[30];
-        scanf("%s", s2);
-        Vector_push_back(&performance, s2);
-        Vector_push_back(&per_student, s);
-        // add individual to map...remaining
-    } else {
-        printf("Student name not valid.:\n");
-        printf("Press 1 to try again 0 to continue\n");
-        int num;
-        scanf("%d", &num);
-        if(num==1)
-            teacher_givePerformance();  
-    }
-}
-
-
-void teacher_seeAttendence() {
-    printf("Student Name -> ");
-    printf("present date :\n");
-    // for(int i = 0; i < Vector_size(&attendence_date); i++) {
-    //     printf("%s  ", attend_student->data[i]);
-    //     printf("%s\n", attendence_date->data[i]);
-    // }
-}
-
-
-void teacher_seePerformance() {
-    printf("1.individual performance \n");
-    printf("2.collectively performance \n");
-    int num;
-    scanf("%d", &num);
-    
-    if(num==1) {
-        printf("Enter student name : ");
-        char s[30];
-        scanf("%s", s);
-        printf("Performance is : ");
-        // printf("%s", ) print performance from map
-
-    } else if(num==2) {
-        printf("Sudent -> Performance\n");
-        //print performances from for loop
-    }
-}
-
-
-
-
-
-
-
-
-
-
-void student_giveAttendence(char* s1) {
-    printf("Enter date and month : \n");
-    char s[50];
-    scanf("%s", s);
-    Vector_push_back(&attendence_date, s);
-    Vector_push_back(&attend_student, s1); 
-}
-
-
-
-
-
-
-
-
-
-char username[20], password[20];
 void changepassword() {
 
     printf("Enter username : ");
@@ -217,6 +81,149 @@ void student_list() {
 
 
 
+void teacher_givePerformance() {
+    printf("Enter student name : ");
+    char s[30];
+    scanf("%s", s);
+
+    if(Vector_search(&student_username, s)) {
+        printf("Enter performance : ");
+        char s2[30];
+        scanf("%s", s2);
+        Vector_push_back(&performance, s2);
+        Vector_push_back(&per_student, s);
+        map_insert(individual, s, s2);
+    } else {
+        printf("Student name not valid.:\n");
+        printf("Press 1 to try again 0 to continue\n");
+        int num;
+        scanf("%d", &num);
+        if(num==1)
+            teacher_givePerformance();  
+    }
+}
+
+
+void teacher_seeAttendence() {
+    printf("Student Name -> ");
+    printf("present date :\n");
+    for(int i = 0; i < Vector_size(&attendence_date); i++) {
+        printf("%s  ", attend_student.data[i]);
+        printf("%s\n", attendence_date.data[i]);
+    }
+}
+
+
+void teacher_seePerformance() {
+    printf("1. individual performance \n");
+    printf("2. collectively performance \n");
+    int num;
+    scanf("%d", &num);
+    
+    if(num==1) {
+        printf("Enter student name : ");
+        char s[30];
+        scanf("%s", s);
+        printf("Performance is : ");
+        printf("%s", map_get(individual, s));
+
+    } else if(num==2) {
+        printf("Sudent -> Performance\n");
+        for(int i = 0; i < Vector_size(&performance); i++) {
+            printf("%s %s\n", per_student.data[i], performance.data[i]);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+void student_giveAttendence(char* s1) {
+    printf("Enter date and month : \n");
+    char s[50];
+    scanf("%s", s);
+    Vector_push_back(&attendence_date, s);
+    Vector_push_back(&attend_student, s1); 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void admin_createAccount() {
+
+    printf("Enter your choice :\n");
+    printf("1. create teacher account :\n");
+    printf("2. create student account :\n");
+    int num;
+    scanf("%d", &num);
+    if(num==1)
+        teacheraccount();
+    else if(num==2)
+        studentaccount();
+
+    printf("press 1 to create another account and 0 to continue \n");
+
+    int v;
+    scanf("%d", &v);
+    if(v==1)
+        admin_createAccount();
+}
+
+
+void admin_deleteAccount() {
+
+    printf("1. delete teacher account :\n");
+    printf("2. delete student account :\n");
+    int num;
+    scanf("%d", &num);
+    if(num==1)
+        deleteteacheraccount();
+    else if(num==2)
+        deletestudentaccount();
+
+}
+
+
+void admin_seePerformance() {
+    printf("1. individual performance \n");
+    printf("2. collectively performance \n");
+
+    int num;
+    scanf("%d", &num);
+    
+    if(num==1) {
+        printf("Enter student name : ");
+        char s[30];
+        scanf("%s", s);
+        printf("Performance is : ");
+        printf("%s", map_get(individual, s));
+
+    } else if(num==2) {
+        printf("Sudent -> Performance\n");
+        for(int i = 0; i < Vector_size(&performance); i++) {
+            printf("%s %s\n", per_student.data[i], performance.data[i]);
+        }
+    }
+}
+
+
 
 
 
@@ -224,9 +231,8 @@ void student_list() {
 
 
 int main() {
-    strcpy(username, "Tejas");
-    strcpy(password, "IqUnix");
-
+    
+    
     Init_vector(&teacher_username);
     Init_vector(&teacher_password);
     Init_vector(&student_username);
@@ -235,6 +241,7 @@ int main() {
     Init_vector(&attend_student);
     Init_vector(&performance);
     Init_vector(&per_student);
+    Init_map(&individual);
 
     int choice;
     char user[30], pass[20];
@@ -270,27 +277,27 @@ int main() {
                                 break;
                             case 2:
                                 // Create teacher account
-                                teacheraccount('t');
+                                teacheraccount();
                                 break;
                             case 3:
                                 // Create student account
-                                studentaccount('s');
+                                studentaccount();
                                 break;
                             case 4:
                                 // Delete teacher account
-                                deleteteacheraccount('t');
+                                deleteteacheraccount();
                                 break;
                             case 5:
                                 // Delete student account
-                                deletestudentaccount('s');
+                                deletestudentaccount();
                                 break;
                             case 6:
                                 // See teacher performance
-                                admin_seePerformance('t');
+                                admin_seePerformance();
                                 break;
                             case 7:
                                 // See student performance
-                                teacher_seePerformance('s');
+                                teacher_seePerformance();
                                 break;
                         }
                     } while (option != 8);
@@ -307,8 +314,28 @@ int main() {
                 if(Vector_search(&teacher_username, user) && Vector_search(&teacher_password, pass)) {
                     int num;
                     do{
-                        
+                        printf("Welcome to Acoount\n");
+                        printf("1. See Attendance\n");
+                        printf("2. Give Performance\n");
+                        printf("3. See Performance\n");
+                        printf("4. Log Out\n");
+
+                        scanf("%d", &num);
+                        switch(num) {
+                            case 1:
+                                teacher_seeAttendence();
+                                break;
+                            case 2:
+                                teacher_givePerformance();
+                                break;
+                            case 3:
+                                teacher_seePerformance();
+                                break;
+                        }
+
                     } while(num != 4);
+                } else {
+                    printf("You are not a valid user !\n");
                 }
 
                 break;
@@ -323,8 +350,25 @@ int main() {
                 if(Vector_search(&student_username, user) && Vector_search(&student_password, pass)) {
                     int num;
                     do{
-                        
-                    } while(num != 4);
+                        printf("Welcome to Acoount\n");
+                        printf("1. Give Attendance\n");
+                        printf("2. See your previous performance\n");
+                        printf("3. Log Out\n");
+
+                        scanf("%d", &num);
+
+                        switch(num) {
+                            case 1:
+                                student_giveAttendence(user);
+                                break;
+                            case 2:
+                                printf("Your previous performance is : %s\n", map_get(individual, user));
+                                break;
+                        }
+
+                    } while(num != 3);
+                } else {
+                    printf("You are not a valid user\n");
                 }
                 break;
 
@@ -337,7 +381,7 @@ int main() {
 
         }
 
-    } while(choice<4 && choice>0);
+    } while(choice != 4);
 
 
     return 0;
