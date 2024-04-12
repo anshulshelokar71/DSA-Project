@@ -5,12 +5,16 @@
 
 #define INITIAL_CAPACITY 10
 
+
+
 void Init_vector(Vector *vec)
 {
     vec->data = NULL;
     vec->size = 0;
     vec->capacity = 0;
 }
+
+
 
 void Vector_push_back(Vector *vec, const char *str)
 {
@@ -34,6 +38,8 @@ void Vector_push_back(Vector *vec, const char *str)
     vec->size++;
 }
 
+
+
 int Vector_search(Vector *vec, const char *str)
 {
     for (size_t i = 0; i < vec->size; i++)
@@ -46,10 +52,14 @@ int Vector_search(Vector *vec, const char *str)
     return 0; // Not found
 }
 
+
+
 int Vector_size(Vector *vec)
 {
     return vec->size;
 }
+
+
 
 const char *Vector_at(Vector *vec, int index)
 {
@@ -61,10 +71,14 @@ const char *Vector_at(Vector *vec, int index)
     return vec->data[index];
 }
 
+
+
 int Vector_isempty(Vector *vec)
 {
     return vec->size == 0;
 }
+
+
 
 void Vector_pop_back(Vector *vec)
 {
@@ -74,6 +88,8 @@ void Vector_pop_back(Vector *vec)
         vec->size--;
     }
 }
+
+
 
 void Vector_free(Vector *vec)
 {
