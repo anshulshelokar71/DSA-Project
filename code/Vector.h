@@ -1,3 +1,7 @@
+#ifndef VECTOR
+#define VECTOR
+
+
 typedef struct {
     char** data;
     size_t size;
@@ -13,3 +17,5 @@ int Vector_isempty(Vector* vec);
 void Vector_free(Vector* vec);
 int Vector_search(Vector* vec, const char* str);
 int Vector_size(Vector* vec);
+
+#endif
