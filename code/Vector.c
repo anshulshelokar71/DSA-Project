@@ -87,6 +87,22 @@ void Vector_free(Vector *vec)
     vec->capacity = 0;
 }
 
+void Vector_erase_value(Vector* vec, const char* value) {
+    size_t index = 0;
+    while (index < vec->size && strcmp(Vector_at(vec, index), value) != 0) {
+        index++;
+    }
+    if (index == vec->size) {
+        fprintf(stderr, "Value not found in the vector\n");
+        return;
+    }
+    for (size_t i = index; i < vec->size - 1; i++) {
+        strcpy(vec->data[i], vec->data[i + 1]);
+    }
+    vec->size--;
+}
+
+
 // int main() {
 //     Vector vec;
 //     Init_vector(&vec);
