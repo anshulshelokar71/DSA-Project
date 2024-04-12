@@ -1,18 +1,26 @@
-#include"Map_String.h"
+#include "Map_String.h"
 
+const int primes[] = {
+    53, 97, 193, 389, 769, 1543, 3079, 6151, 12289, 24593, 49157, 98317, 196613,
+    393241, 786433, 1572869, 3145739, 6291469, 12582917, 25165843, 50331653,
+    100663319, 201326611, 402653189, 805306457, 1610612741};
 
-unsigned int hash(const char *key, int cp) {
+unsigned int hash(const char *key, int cp)
+{
     unsigned int hash = 0;
-    while (*key) {
+    while (*key)
+    {
         hash = (hash * 31) + *key;
         key++;
     }
     return hash % cp;
 }
 
-void Init_map(Map **m) {
+void Init_map(Map **m)
+{
     Map *map = (Map *)malloc(sizeof(Map));
-    if (map) {
+    if (map)
+    {
         map->size = 0;
         map->capacity_index = 0;
         map->keys = (char **)calloc(primes[map->capacity_index], sizeof(char *));
@@ -21,13 +29,16 @@ void Init_map(Map **m) {
     *m = map;
 }
 
-void resize(Map *map) {
+void resize(Map *map)
+{
     int old_capacity = primes[map->capacity_index++];
     int new_capacity = primes[map->capacity_index];
     char **new_keys = (char **)calloc(new_capacity, sizeof(char *));
     char **new_values = (char **)calloc(new_capacity, sizeof(char *));
-    for (int i = 0; i < old_capacity; i++) {
-        if (map->keys[i]) {
+    for (int i = 0; i < old_capacity; i++)
+    {
+        if (map->keys[i])
+        {
             unsigned int index = hash(map->keys[i], new_capacity);
             while (new_keys[index])
                 index = (index + 1) % new_capacity;
@@ -41,12 +52,15 @@ void resize(Map *map) {
     map->values = new_values;
 }
 
-void map_insert(Map *map, const char *key, const char *value) {
+void map_insert(Map *map, const char *key, const char *value)
+{
     if ((double)map->size / primes[map->capacity_index] >= LOAD_FACTOR)
         resize(map);
     int index = hash(key, primes[map->capacity_index]);
-    while (map->keys[index]) {
-        if (strcmp(map->keys[index], key) == 0) {
+    while (map->keys[index])
+    {
+        if (strcmp(map->keys[index], key) == 0)
+        {
             free(map->values[index]);
             map->values[index] = strdup(value);
             return;
@@ -58,10 +72,13 @@ void map_insert(Map *map, const char *key, const char *value) {
     map->size++;
 }
 
-const char *map_get(Map *map, const char *key) {
+const char *map_get(Map *map, const char *key)
+{
     int index = hash(key, primes[map->capacity_index]);
-    while (map->keys[index]) {
-        if (strcmp(map->keys[index], key) == 0) {
+    while (map->keys[index])
+    {
+        if (strcmp(map->keys[index], key) == 0)
+        {
             return map->values[index];
         }
         index = (index + 1) % primes[map->capacity_index];
@@ -69,10 +86,13 @@ const char *map_get(Map *map, const char *key) {
     return NULL;
 }
 
-void map_erase(Map *map, const char *key) {
+void map_erase(Map *map, const char *key)
+{
     int index = hash(key, primes[map->capacity_index]);
-    while (map->keys[index]) {
-        if (strcmp(map->keys[index], key) == 0) {
+    while (map->keys[index])
+    {
+        if (strcmp(map->keys[index], key) == 0)
+        {
             free(map->keys[index]);
             free(map->values[index]);
             map->keys[index] = NULL;
@@ -84,18 +104,19 @@ void map_erase(Map *map, const char *key) {
     }
 }
 
-bool map_find(Map *map, const char *key) {
+bool map_find(Map *map, const char *key)
+{
     int index = hash(key, primes[map->capacity_index]);
-    while (map->keys[index]) {
-        if (strcmp(map->keys[index], key) == 0) {
+    while (map->keys[index])
+    {
+        if (strcmp(map->keys[index], key) == 0)
+        {
             return true;
         }
         index = (index + 1) % primes[map->capacity_index];
     }
     return false;
 }
-
-
 
 // int main() {
 //     Map *myMap;
