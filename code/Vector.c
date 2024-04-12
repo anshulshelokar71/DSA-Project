@@ -91,9 +91,9 @@ void Vector_free(Vector *vec)
 //     Vector vec;
 //     Init_vector(&vec);
 
-//     Vector_push_back(&vec, "Hello");
-//     Vector_push_back(&vec, "World");
-//     Vector_push_back(&vec, "!");
+    // Vector_push_back(&vec, "Hello");
+    // Vector_push_back(&vec, "World");
+    // Vector_push_back(&vec, "!");
 
 //     for (size_t i = 0; i < vec.size; i++) {
 //         printf("%s ", Vector_at(&vec, i));
