@@ -141,7 +141,7 @@ void teacher_seePerformance() {
         char s[30];
         scanf("%s", s);
         printf("Performance is : ");
-        printf("%s", map_get(individual, s));
+        printf("%s\n", map_get(individual, s));
 
     } else if(num==2) {
         printf("Sudent -> Performance\n");
@@ -229,7 +229,7 @@ void admin_seePerformance() {
         char s[30];
         scanf("%s", s);
         printf("Performance is : ");
-        printf("%s", map_get(individual, s));
+        printf("%s\n", map_get(individual, s));
 
     } else if(num==2) {
         printf("Sudent -> Performance\n");
