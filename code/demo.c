@@ -47,8 +47,10 @@ void deleteteacheraccount() {
     scanf("%s", &n);
     printf("Enter password : ");
     scanf("%s", &pass);
-    if(Vector_search(&teacher_username, n) && Vector_search(&teacher_password, pass));
+    if(Vector_search(&teacher_username, n) && Vector_search(&teacher_password, pass)) {
         Vector_erase_value(&teacher_username, n);
+        Vector_erase_value(&teacher_password, pass);
+    }
 }
 
 
@@ -66,10 +68,8 @@ void studentaccount() {
     scanf("%s", &n);
     printf("Enter password : ");
     scanf("%s", &pass);
-    if(Vector_search(&teacher_username, n) && Vector_search(&teacher_password, pass)) {
-        Vector_push_back(&student_username, n);
-        Vector_push_back(&student_password, pass);
-    }
+    Vector_push_back(&student_username, n);
+    Vector_push_back(&student_password, pass);
 }
 
 
@@ -79,9 +79,9 @@ void deletestudentaccount() {
     scanf("%s", &n);
     printf("Enter password : ");
     scanf("%s", &pass);
-    if(Vector_search(&teacher_username, n) && Vector_search(&teacher_password, pass)) {
-        Vector_erase_value(&teacher_username, n);
-        Vector_erase_value(&teacher_password, pass);
+    if(Vector_search(&student_username, n) && Vector_search(&student_password, pass)) {
+        Vector_erase_value(&student_username, n);
+        Vector_erase_value(&student_password, pass);
     }
 }
 
@@ -245,6 +245,80 @@ void admin_seePerformance() {
 
 
 
+void saveDataToCSV(const char *filename1, const char *filename2, const char *filename3, const char *filename4) {
+    FILE *file1 = fopen(filename1, "w");
+    if (file1 == NULL) {
+        fprintf(stderr, "Error opening file for writing.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Write teacher accounts
+    fprintf(file1, "Teacher passwords\n");
+    for (int i = 0; i < Vector_size(&teacher_username); i++) {
+        fprintf(file1, "%s,%s\n", teacher_username.data[i], teacher_password.data[i]);
+    }
+
+    fclose(file1);
+
+
+
+
+    // Write student accounts
+    FILE *file2 = fopen(filename2, "w");
+    if (file2 == NULL) {
+        fprintf(stderr, "Error opening file for writing.\n");
+        exit(EXIT_FAILURE);
+    }
+    fprintf(file2, "Student passwords\n");
+    for (int i = 0; i < Vector_size(&student_username); i++) {
+        fprintf(file2, "%s,%s\n", student_username.data[i], student_password.data[i]);
+    }
+
+    fclose(file2);
+
+
+
+
+
+    // Write attendance data
+    FILE *file3 = fopen(filename3, "w");
+    if (file3 == NULL) {
+        fprintf(stderr, "Error opening file for writing.\n");
+        exit(EXIT_FAILURE);
+    }
+    fprintf(file3, "Student Date\n");
+    for (int i = 0; i < Vector_size(&attendence_date); i++) {
+        fprintf(file3, "%s,%s\n", attend_student.data[i], attendence_date.data[i]);
+    }
+    fclose(file3);
+
+
+
+    // Write performance data
+    FILE *file4 = fopen(filename4, "w");
+    if (file4 == NULL) {
+        fprintf(stderr, "Error opening file for writing.\n");
+        exit(EXIT_FAILURE);
+    }
+    fprintf(file4, "Student Perfromance\n");
+    for (int i = 0; i < Vector_size(&performance); i++) {
+        fprintf(file4, "%s,%s\n", per_student.data[i], performance.data[i]);
+    }
+
+    fclose(file4);
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 int main() {
     
@@ -397,6 +471,7 @@ int main() {
                 break;
 
             case 4:
+                saveDataToCSV("Teacher_data.csv", "Studemt_data.csv", "Attendance.csv", "Performance.csv");
                 printf("Exiting...\n");
                 break;
 
