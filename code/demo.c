@@ -42,7 +42,13 @@ void teacheraccount() {
 
 
 void deleteteacheraccount() {
-
+    char n[20], pass[20];
+    printf("Enter name : ");
+    scanf("%s", &n);
+    printf("Enter password : ");
+    scanf("%s", &pass);
+    if(Vector_search(&teacher_username, n) && Vector_search(&teacher_password, pass));
+        Vector_erase_value(&teacher_username, n);
 }
 
 
@@ -60,13 +66,23 @@ void studentaccount() {
     scanf("%s", &n);
     printf("Enter password : ");
     scanf("%s", &pass);
-    Vector_push_back(&student_username, n);
-    Vector_push_back(&student_password, pass);
+    if(Vector_search(&teacher_username, n) && Vector_search(&teacher_password, pass)) {
+        Vector_push_back(&student_username, n);
+        Vector_push_back(&student_password, pass);
+    }
 }
 
 
 void deletestudentaccount() {
-
+    char n[20], pass[20];
+    printf("Enter name : ");
+    scanf("%s", &n);
+    printf("Enter password : ");
+    scanf("%s", &pass);
+    if(Vector_search(&teacher_username, n) && Vector_search(&teacher_password, pass)) {
+        Vector_erase_value(&teacher_username, n);
+        Vector_erase_value(&teacher_password, pass);
+    }
 }
 
 
@@ -268,7 +284,9 @@ int main() {
                         printf("5. Delete student account\n");
                         printf("6. See teacher performance\n");
                         printf("7. See student performance\n");
-                        printf("8. Logout\n");
+                        printf("8. Display all teachers\n");
+                        printf("9. Display all Student\n");
+                        printf("10. Logout\n");
                         scanf("%d", &option);
                         switch (option) {
                             case 1:
@@ -299,8 +317,14 @@ int main() {
                                 // See student performance
                                 teacher_seePerformance();
                                 break;
+                            case 8:
+                                teacher_list();
+                                break;
+                            case 9:
+                                student_list();
+                                break;
                         }
-                    } while (option != 8);
+                    } while (option != 10);
                 } else {
                     printf("Wrong username or password.\n");
                 }
