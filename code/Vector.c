@@ -3,7 +3,7 @@
 #include <string.h>
 #include "Vector.h"
 
-#define INITIAL_CAPACITY 10
+#define INITIAL_CAPACITY_VEC 10
 
 
 
