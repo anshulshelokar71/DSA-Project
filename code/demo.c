@@ -119,6 +119,17 @@ void deletestudentaccount() {
 }
 
 
+void student_seeAttendence(char *s) {
+    printf(CYAN"present date :\n");
+    for(int i = 0; i < Vector_size(&attendence_date); i++) {
+        printf("%s  ", attend_student.data[i]);
+        if(strcmp(attend_student.data[i], s) == 0)
+            printf("%s\n", attendence_date.data[i]);
+    }
+    printf(""RESET);
+}
+
+
 void student_list() {
     for(int i = 0; i < Vector_size(&student_username); i++) {
         printf(CYAN"%d.  %s    %s\n"RESET, i+1, student_username.data[i], student_password.data[i]);
@@ -187,19 +198,20 @@ void teacher_seePerformance() {
 
 
 
-
-
-
-
-
-
-
-void student_giveAttendence(char* s1) {
-    printf(CYAN"Enter date and month : \n"RESET);
-    char s[50];
-    scanf("%s", s);
-    Vector_push_back(&attendence_date, s);
-    Vector_push_back(&attend_student, s1); 
+void teacher_markAttendance() {
+    char date[10];
+    printf(CYAN"Enter Date : "RESET);
+    scanf("%s", date);
+    Vector_push_back(&attendence_date, date);
+    int f = 1;
+    while(f){
+        printf(CYAN"Enter student name : "RESET);
+        char s[30];
+        scanf("%s", s);
+        Vector_push_back(&attend_student, s);
+        printf("press 1 to exit and 0 to continue\n");
+        scanf("%d", &f);
+    }
 }
 
 
@@ -263,7 +275,10 @@ void admin_seePerformance() {
         char s[30];
         scanf("%s", s);
         printf("Performance is : ");
-        printf("%s\n", map_get(individual, s));
+        if(map_find(individual, s))
+            printf("%s\n", map_get(individual, s));
+        else 
+            printf(RED "Performance not updated yet!!!\n" RESET);
 
     } else if(num==2) {
         printf("Sudent -> Performance\n");
@@ -461,11 +476,10 @@ int main() {
                         printf("3. Create student account\n");
                         printf("4. Delete teacher account\n");
                         printf("5. Delete student account\n");
-                        printf("6. See teacher performance\n");
-                        printf("7. See student performance\n");
-                        printf("8. Display all teachers\n");
-                        printf("9. Display all Student\n");
-                        printf("10. Logout\n");
+                        printf("6. See student performance\n");
+                        printf("7. Display all teachers\n");
+                        printf("8. Display all Student\n");
+                        printf("9. Logout\n");
                         printf("----------------------------------------\n"RESET);
                         scanf("%d", &option);
                         switch (option) {
@@ -498,17 +512,13 @@ int main() {
                                 admin_seePerformance();
                                 break;
                             case 7:
-                                // See student performance
-                                teacher_seePerformance();
-                                break;
-                            case 8:
                                 teacher_list();
                                 break;
-                            case 9:
+                            case 8:
                                 student_list();
                                 break;
                         }
-                    } while (option != 10);
+                    } while (option != 9);
                 } else {
                     printf(RED"Wrong username or password.\n"RESET);
                 }
@@ -525,9 +535,10 @@ int main() {
                     do{
                         printf(YELLOW"----------------------------------------\n"RESET);
                         printf(YELLOW"1. See Attendance\n");
-                        printf("2. Give Performance\n");
-                        printf("3. See Performance\n");
-                        printf("4. Log Out\n"RESET);
+                        printf("2. Mark Attendance\n");
+                        printf("3. Give Performance\n");
+                        printf("4. See Performance\n");
+                        printf("5. Log Out\n"RESET);
 
                         scanf("%d", &num);
                         switch(num) {
@@ -535,14 +546,17 @@ int main() {
                                 teacher_seeAttendence();
                                 break;
                             case 2:
-                                teacher_givePerformance();
+                                teacher_markAttendance();
                                 break;
                             case 3:
+                                teacher_givePerformance();
+                                break;
+                            case 4:
                                 teacher_seePerformance();
                                 break;
                         }
                         printf(YELLOW"----------------------------------------\n\n\n"RESET);
-                    } while(num != 4);
+                    } while(num != 5);
                 } else {
                     printf(RED"You are not a valid user !\n"RESET);
                 }
@@ -561,7 +575,7 @@ int main() {
                         printf(GREEN"\n\n\nWelcome to Acoount\n"RESET);
                     do{
                         printf(YELLOW"----------------------------------------\n"RESET);
-                        printf(YELLOW"1. Give Attendance\n");
+                        printf(YELLOW"1. See Attendance\n");
                         printf("2. See your previous performance\n");
                         printf("3. Log Out\n"RESET);
 
@@ -569,7 +583,7 @@ int main() {
 
                         switch(num) {
                             case 1:
-                                student_giveAttendence(user);
+                                student_seeAttendence(user);
                                 break;
                             case 2:
                                 printf(CYAN"Your previous performance is : %s\n"RESET, map_get(individual, user));
