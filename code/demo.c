@@ -1,17 +1,17 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
-# include "Vector.c"
-# include "Map_String.c"
-#include <mysql/mysql.h>
+# include "Vector.h"
+# include "Map_String.h"
+// #include <mysql/mysql.h>
 
 char username[10] = "Tejas";
 char password[10] = "Sanika";
 
-#define DB_HOST "localhost"
-#define DB_USER "your_username"
-#define DB_PASS "your_password"
-#define DB_NAME "DSA"
+// #define DB_HOST "localhost"
+// #define DB_USER "your_username"
+// #define DB_PASS "your_password"
+// #define DB_NAME "DSA"
 
 #define RED     "\x1B[31m"
 #define GREEN   "\x1B[32m"
@@ -33,23 +33,23 @@ Vector per_student;
 Map *individual;
 
 
-MYSQL *db_connect() {
-    MYSQL *conn = mysql_init(NULL);
-    if (conn == NULL) {
-        fprintf(stderr, "mysql_init() failed\n");
-        exit(1);
-    }
-    if (mysql_real_connect(conn, DB_HOST, DB_USER, DB_PASS, DB_NAME, 0, NULL, 0) == NULL) {
-        fprintf(stderr, "mysql_real_connect() failed: %s\n", mysql_error(conn));
-        mysql_close(conn);
-        exit(1);
-    }
-    return conn;
-}
+// MYSQL *db_connect() {
+//     MYSQL *conn = mysql_init(NULL);
+//     if (conn == NULL) {
+//         fprintf(stderr, "mysql_init() failed\n");
+//         exit(1);
+//     }
+//     if (mysql_real_connect(conn, DB_HOST, DB_USER, DB_PASS, DB_NAME, 0, NULL, 0) == NULL) {
+//         fprintf(stderr, "mysql_real_connect() failed: %s\n", mysql_error(conn));
+//         mysql_close(conn);
+//         exit(1);
+//     }
+//     return conn;
+// }
 
-void db_disconnect(MYSQL *conn) {
-    mysql_close(conn);
-}
+// void db_disconnect(MYSQL *conn) {
+//     mysql_close(conn);
+// }
 
 void changepassword() {
 
@@ -78,7 +78,7 @@ void deleteteacheraccount() {
     scanf("%s", n);
     printf("Enter password : ");
     scanf("%s", pass);
-    if(Vector_search(&teacher_username, n) && Vector_search(&teacher_password, pass)) {
+    if(Vector_search(&teacher_username, n) != 1 && Vector_search(&teacher_username, n) == Vector_search(&teacher_password, pass)) {
         Vector_erase_value(&teacher_username, n);
         Vector_erase_value(&teacher_password, pass);
     }
@@ -89,7 +89,7 @@ void deleteteacheraccount() {
 
 void teacher_list() {
     for(int i = 0; i < Vector_size(&teacher_username); i++) {
-        printf("%d.  %s    %s\n", i+1, teacher_username.data[i], teacher_password.data[i]);
+        printf(CYAN"%d.  %s    %s\n"RESET, i+1, teacher_username.data[i], teacher_password.data[i]);
     }
 } 
 
@@ -112,7 +112,7 @@ void deletestudentaccount() {
     scanf("%s", n);
     printf("Enter password : ");
     scanf("%s", pass);
-    if(Vector_search(&student_username, n) && Vector_search(&student_password, pass)) {
+    if(Vector_search(&student_username, n) != -1 && Vector_search(&student_password, pass) == Vector_search(&student_username, n)) {
         Vector_erase_value(&student_username, n);
         Vector_erase_value(&student_password, pass);
     }
@@ -121,7 +121,7 @@ void deletestudentaccount() {
 
 void student_list() {
     for(int i = 0; i < Vector_size(&student_username); i++) {
-        printf("%d.  %s    %s\n", i+1, student_username.data[i], student_password.data[i]);
+        printf(CYAN"%d.  %s    %s\n"RESET, i+1, student_username.data[i], student_password.data[i]);
     }
 } 
 
@@ -135,7 +135,7 @@ void teacher_givePerformance() {
     char s[30];
     scanf("%s", s);
 
-    if(Vector_search(&student_username, s)) {
+    if(Vector_search(&student_username, s) != -1) {
         printf("Enter performance : ");
         char s2[30];
         scanf("%s", s2);
@@ -154,12 +154,13 @@ void teacher_givePerformance() {
 
 
 void teacher_seeAttendence() {
-    printf("Student Name -> ");
+    printf(CYAN"Student Name -> ");
     printf("present date :\n");
     for(int i = 0; i < Vector_size(&attendence_date); i++) {
         printf("%s  ", attend_student.data[i]);
         printf("%s\n", attendence_date.data[i]);
     }
+    printf(""RESET);
 }
 
 
@@ -173,13 +174,13 @@ void teacher_seePerformance() {
         printf("Enter student name : ");
         char s[30];
         scanf("%s", s);
-        printf("Performance is : ");
-        printf("%s\n", map_get(individual, s));
+        printf(CYAN"Performance is : ");
+        printf("%s\n"RESET, map_get(individual, s));
 
     } else if(num==2) {
-        printf("Sudent -> Performance\n");
+        printf(CYAN"Sudent -> Performance\n"RESET);
         for(int i = 0; i < Vector_size(&performance); i++) {
-            printf("%s %s\n", per_student.data[i], performance.data[i]);
+            printf(CYAN"%s %s\n"RESET, per_student.data[i], performance.data[i]);
         }
     }
 }
@@ -194,7 +195,7 @@ void teacher_seePerformance() {
 
 
 void student_giveAttendence(char* s1) {
-    printf("Enter date and month : \n");
+    printf(CYAN"Enter date and month : \n"RESET);
     char s[50];
     scanf("%s", s);
     Vector_push_back(&attendence_date, s);
@@ -273,37 +274,37 @@ void admin_seePerformance() {
 }
 
 
-void insertTeacherData(MYSQL *conn) {
-    for (int i = 0; i < Vector_size(&teacher_username); i++) {
-        char *username = teacher_username.data[i];
-        char *password = teacher_password.data[i];
+// void insertTeacherData(MYSQL *conn) {
+//     for (int i = 0; i < Vector_size(&teacher_username); i++) {
+//         char *username = teacher_username.data[i];
+//         char *password = teacher_password.data[i];
 
-        char query[100];
-        sprintf(query, "INSERT INTO teachers (username, password) VALUES ('%s', '%s')", username, password);
+//         char query[100];
+//         sprintf(query, "INSERT INTO teachers (username, password) VALUES ('%s', '%s')", username, password);
 
-        if (mysql_query(conn, query)) {
-            fprintf(stderr, "mysql_query() failed: %s\n", mysql_error(conn));
-            mysql_close(conn);
-            exit(1);
-        }
-    }
-}
+//         if (mysql_query(conn, query)) {
+//             fprintf(stderr, "mysql_query() failed: %s\n", mysql_error(conn));
+//             mysql_close(conn);
+//             exit(1);
+//         }
+//     }
+// }
 
-void insertStudentData(MYSQL *conn) {
-    for (int i = 0; i < Vector_size(&student_username); i++) {
-        char *username = student_username.data[i];
-        char *password = student_password.data[i];
+// void insertStudentData(MYSQL *conn) {
+//     for (int i = 0; i < Vector_size(&student_username); i++) {
+//         char *username = student_username.data[i];
+//         char *password = student_password.data[i];
 
-        char query[100];
-        sprintf(query, "INSERT INTO students (username, password) VALUES ('%s', '%s')", username, password);
+//         char query[100];
+//         sprintf(query, "INSERT INTO students (username, password) VALUES ('%s', '%s')", username, password);
 
-        if (mysql_query(conn, query)) {
-            fprintf(stderr, "mysql_query() failed: %s\n", mysql_error(conn));
-            mysql_close(conn);
-            exit(1);
-        }
-    }
-}
+//         if (mysql_query(conn, query)) {
+//             fprintf(stderr, "mysql_query() failed: %s\n", mysql_error(conn));
+//             mysql_close(conn);
+//             exit(1);
+//         }
+//     }
+// }
 
 // void insertAttendanceData(MYSQL *conn) {
 //     for (int i = 0; i < Vector_size(&attendence_date); i++) {
@@ -412,19 +413,19 @@ void saveDataToCSV(const char *filename1, const char *filename2, const char *fil
 
 
 
-void saveDataToDatabase(MYSQL *conn) {
-    insertTeacherData(conn);
-    insertStudentData(conn);
-    // insertAttendanceData(conn);
-    // insertPerformanceData(conn);
-}
+// void saveDataToDatabase(MYSQL *conn) {
+//     insertTeacherData(conn);
+//     insertStudentData(conn);
+//     // insertAttendanceData(conn);
+//     // insertPerformanceData(conn);
+// }
 
 
 
 
 int main() {
     
-     MYSQL *conn = db_connect();
+    //  MYSQL *conn = db_connect();
     Init_vector(&teacher_username);
     Init_vector(&teacher_password);
     Init_vector(&student_username);
@@ -439,20 +440,22 @@ int main() {
     char user[30], pass[20];
 
     do {
-        printf("Enter the type of account you want to log in:\n");
-        printf("1. Admin\n2. Teacher\n3. Student\n4. Exit\n");
+        printf(MAGENTA"\n\n\n\n\n\nEnter the type of account you want to log in:\n"RESET);
+        printf(CYAN"1. Admin\n2. Teacher\n3. Student\n4. Exit\n"RESET);
         scanf("%d", &choice);
 
         switch(choice) {
 
             case 1:
-                printf(RED "Enter username: " RESET);
+                printf(BLUE "Enter username: " RESET);
                 scanf("%s", user);
-                printf("Enter password: ");
+                printf(BLUE"Enter password: "RESET);
                 scanf("%s", pass);
                 if (strcmp(username, user) == 0 && strcmp(password, pass) == 0) {
+                    printf(GREEN"\n\n\n\n\nWelcome Admin\n" RESET);
                     int option;
                     do {
+                        printf(YELLOW"----------------------------------------\n");
                         printf("1. Change password\n");
                         printf("2. Create teacher account\n");
                         printf("3. Create student account\n");
@@ -463,6 +466,7 @@ int main() {
                         printf("8. Display all teachers\n");
                         printf("9. Display all Student\n");
                         printf("10. Logout\n");
+                        printf("----------------------------------------\n"RESET);
                         scanf("%d", &option);
                         switch (option) {
                             case 1:
@@ -472,18 +476,22 @@ int main() {
                             case 2:
                                 // Create teacher account
                                 teacheraccount();
+                                printf(GREEN"Account created succesfully !\n"RESET);
                                 break;
                             case 3:
                                 // Create student account
                                 studentaccount();
+                                printf(GREEN"Account created succesfully !\n"RESET);
                                 break;
                             case 4:
                                 // Delete teacher account
                                 deleteteacheraccount();
+                                printf(GREEN"Account deleted succesfully !\n"RESET);
                                 break;
                             case 5:
                                 // Delete student account
                                 deletestudentaccount();
+                                printf(GREEN"Account deleted succesfully !\n"RESET);
                                 break;
                             case 6:
                                 // See teacher performance
@@ -502,23 +510,24 @@ int main() {
                         }
                     } while (option != 10);
                 } else {
-                    printf("Wrong username or password.\n");
+                    printf(RED"Wrong username or password.\n"RESET);
                 }
                 break;
 
             case 2:
-                printf("Enter username: ");
+                printf(BLUE"Enter username: "RESET);
                 scanf("%s", user);
-                printf("Enter password: ");
+                printf(BLUE"Enter password: "RESET);
                 scanf("%s", pass);
-                if(Vector_search(&teacher_username, user) && Vector_search(&teacher_password, pass)) {
+                if(Vector_search(&teacher_username, user) != -1 && Vector_search(&teacher_password, pass) == Vector_search(&teacher_username, user)) {
                     int num;
+                        printf(GREEN"\n\n\nWelcome to Acoount\n"RESET);
                     do{
-                        printf("Welcome to Acoount\n");
-                        printf("1. See Attendance\n");
+                        printf(YELLOW"----------------------------------------\n"RESET);
+                        printf(YELLOW"1. See Attendance\n");
                         printf("2. Give Performance\n");
                         printf("3. See Performance\n");
-                        printf("4. Log Out\n");
+                        printf("4. Log Out\n"RESET);
 
                         scanf("%d", &num);
                         switch(num) {
@@ -532,28 +541,29 @@ int main() {
                                 teacher_seePerformance();
                                 break;
                         }
-
+                        printf(YELLOW"----------------------------------------\n\n\n"RESET);
                     } while(num != 4);
                 } else {
-                    printf("You are not a valid user !\n");
+                    printf(RED"You are not a valid user !\n"RESET);
                 }
 
                 break;
 
             case 3:
                 // Student login
-                printf("Enter username: ");
+                printf(BLUE"Enter username: "RESET);
                 scanf("%s", user);
-                printf("Enter password: ");
+                printf(BLUE"Enter password: "RESET);
                 scanf("%s", pass);
                 
-                if(Vector_search(&student_username, user) && Vector_search(&student_password, pass)) {
+                if(Vector_search(&student_username, user) != -1 && Vector_search(&student_password, pass) == Vector_search(&student_username, user)) {
                     int num;
+                        printf(GREEN"\n\n\nWelcome to Acoount\n"RESET);
                     do{
-                        printf("Welcome to Acoount\n");
-                        printf("1. Give Attendance\n");
+                        printf(YELLOW"----------------------------------------\n"RESET);
+                        printf(YELLOW"1. Give Attendance\n");
                         printf("2. See your previous performance\n");
-                        printf("3. Log Out\n");
+                        printf("3. Log Out\n"RESET);
 
                         scanf("%d", &num);
 
@@ -562,29 +572,29 @@ int main() {
                                 student_giveAttendence(user);
                                 break;
                             case 2:
-                                printf("Your previous performance is : %s\n", map_get(individual, user));
+                                printf(CYAN"Your previous performance is : %s\n"RESET, map_get(individual, user));
                                 break;
                         }
-
+                        printf(YELLOW"----------------------------------------\n\n\n\n"RESET);
                     } while(num != 3);
                 } else {
-                    printf("You are not a valid user\n");
+                    printf(RED"You are not a valid user\n"RESET);
                 }
                 break;
 
             case 4:
-             saveDataToDatabase(conn);
+            //  saveDataToDatabase(conn);
                 saveDataToCSV("Teacher_data.csv", "Studemt_data.csv", "Attendance.csv", "Performance.csv");
-                printf("Exiting...\n");
+                printf(MAGENTA"Exiting...\n"RESET);
                 break;
 
             default:
-                printf("Invalid choice.\n");
+                printf(RED"Invalid choice.\n"RESET);
 
         }
 
     } while(choice != 4);
-db_disconnect(conn);
+// db_disconnect(conn);
 
     return 0;
 }

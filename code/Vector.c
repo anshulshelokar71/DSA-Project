@@ -46,10 +46,10 @@ int Vector_search(Vector *vec, const char *str)
     {
         if (strcmp(vec->data[i], str) == 0)
         {
-            return 1; // Found
+            return i; // Found
         }
     }
-    return 0; // Not found
+    return -1; // Not found
 }
 
 
