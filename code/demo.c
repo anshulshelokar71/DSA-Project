@@ -441,7 +441,7 @@ int main() {
 
     do {
         printf(MAGENTA"\n\n\n\n\n\nEnter the type of account you want to log in:\n"RESET);
-        printf(CYAN"1. Admin\n2. Teacher\n3. Student\n4. Exit\n"RESET);
+        printf(CYAN"1. Admin\n2. Teacher\n3. Student \n4. Import data as CSV\n5. Exit\n"RESET);
         scanf("%d", &choice);
 
         switch(choice) {
@@ -585,16 +585,18 @@ int main() {
             case 4:
             //  saveDataToDatabase(conn);
                 saveDataToCSV("Teacher_data.csv", "Studemt_data.csv", "Attendance.csv", "Performance.csv");
-                printf(MAGENTA"Exiting...\n"RESET);
                 break;
 
+            case 5:
+                printf(MAGENTA"Exiting...\n"RESET);
+                // db_disconnect(conn);
+                break;
             default:
                 printf(RED"Invalid choice.\n"RESET);
 
         }
 
-    } while(choice != 4);
-// db_disconnect(conn);
+    } while(choice != 5);
 
     return 0;
 }
