@@ -1,8 +1,5 @@
-final:
-	gcc -g -o ClassTrack .\STL\Vector.c .\STL\Map_String.c .\ClassTrack.c
-	./ClassTrack
-	cls
-
-clear:
-	cls
-	make final
+.PHONY: code
+code: ClassTrack.c ./STL/Vector.c ./STL/Map_String.c
+	gcc -o code Classtrack.c ./STL/Vector.c ./STL/Map_String.c -lmysqlclient
+	
+	./code

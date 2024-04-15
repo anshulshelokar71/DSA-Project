@@ -61,7 +61,7 @@ int Vector_size(Vector *vec)
 
 
 
-const char *Vector_at(Vector *vec, int index)
+ char *Vector_at(Vector *vec, int index)
 {
     if (index >= vec->size)
     {
