@@ -3,16 +3,16 @@
 # include <string.h>
 # include "STL/Vector.h"
 # include "STL/Map_String.h"
-// #include <mysql/mysql.h>
-
+#include <mysql/mysql.h>
+////////////////////////////////////////////////// ADMIN LOGIN /////////////////////////////////////////////////////////////
 char username[10] = "Tejas";
 char password[10] = "Sanika";
-
-// #define DB_HOST "localhost"
-// #define DB_USER "your_username"
-// #define DB_PASS "your_password"
-// #define DB_NAME "DSA"
-
+/////////////////////////////////////////////////// MYSQL INIT ////////////////////////////////////////////////////////////
+#define DB_HOST "localhost"
+#define DB_USER "your_username"
+#define DB_PASS "your_password"
+#define DB_NAME "DSA"
+////////////////////////////////////////////// COLOR PALETTE //////////////////////////////////////////////////////////////
 #define RED     "\x1B[31m"
 #define GREEN   "\x1B[32m"
 #define YELLOW  "\x1B[33m"
@@ -21,7 +21,8 @@ char password[10] = "Sanika";
 #define CYAN    "\x1B[36m"
 #define WHITE   "\x1B[37m"
 #define RESET   "\x1B[0m"
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////// DEFINING VECTORS AND MAP ////////////////////////////////////////////////
 Vector teacher_username;
 Vector teacher_password;
 Vector student_username;
@@ -33,24 +34,6 @@ Vector per_student;
 Map *individual;
 
 
-// MYSQL *db_connect() {
-//     MYSQL *conn = mysql_init(NULL);
-//     if (conn == NULL) {
-//         fprintf(stderr, "mysql_init() failed\n");
-//         exit(1);
-//     }
-//     if (mysql_real_connect(conn, DB_HOST, DB_USER, DB_PASS, DB_NAME, 0, NULL, 0) == NULL) {
-//         fprintf(stderr, "mysql_real_connect() failed: %s\n", mysql_error(conn));
-//         mysql_close(conn);
-//         exit(1);
-//     }
-//     return conn;
-// }
-
-// void db_disconnect(MYSQL *conn) {
-//     mysql_close(conn);
-// }
-
 void changepassword() {
 
     printf("Enter username : ");
@@ -60,40 +43,7 @@ void changepassword() {
     
 }
 
-
-void teacheraccount() {
-    char n[20], pass[20];
-    printf("Enter name : ");
-    scanf("%s", n);
-    printf("Enter password : ");
-    scanf("%s", pass);
-    Vector_push_back(&teacher_username, n);
-    Vector_push_back(&teacher_password, pass);
-}
-
-
-void deleteteacheraccount() {
-    char n[20], pass[20];
-    printf("Enter name : ");
-    scanf("%s", n);
-    printf("Enter password : ");
-    scanf("%s", pass);
-    if(Vector_search(&teacher_username, n) != 1 && Vector_search(&teacher_username, n) == Vector_search(&teacher_password, pass)) {
-        Vector_erase_value(&teacher_username, n);
-        Vector_erase_value(&teacher_password, pass);
-    }
-}
-
-
-
-
-void teacher_list() {
-    for(int i = 0; i < Vector_size(&teacher_username); i++) {
-        printf(CYAN"%d.  %s    %s\n"RESET, i+1, teacher_username.data[i], teacher_password.data[i]);
-    }
-} 
-
-
+////////////////////////////////////////////////////////STUDENT SIDE//////////////////////////////////////////////////////
 
 void studentaccount() {
     char n[20], pass[20];
@@ -106,17 +56,6 @@ void studentaccount() {
 }
 
 
-void deletestudentaccount() {
-    char n[20], pass[20];
-    printf("Enter name : ");
-    scanf("%s", n);
-    printf("Enter password : ");
-    scanf("%s", pass);
-    if(Vector_search(&student_username, n) != -1 && Vector_search(&student_password, pass) == Vector_search(&student_username, n)) {
-        Vector_erase_value(&student_username, n);
-        Vector_erase_value(&student_password, pass);
-    }
-}
 
 
 void student_seeAttendence(char *s) {
@@ -130,14 +69,18 @@ void student_seeAttendence(char *s) {
 }
 
 
-void student_list() {
-    for(int i = 0; i < Vector_size(&student_username); i++) {
-        printf(CYAN"%d.  %s    %s\n"RESET, i+1, student_username.data[i], student_password.data[i]);
-    }
-} 
+///////////////////////////////////////////////////TEACHER SIDE////////////////////////////////////////////////////////////
 
 
-
+void teacheraccount() {
+    char n[20], pass[20];
+    printf("Enter name : ");
+    scanf("%s", n);
+    printf("Enter password : ");
+    scanf("%s", pass);
+    Vector_push_back(&teacher_username, n);
+    Vector_push_back(&teacher_password, pass);
+}
 
 
 
@@ -162,6 +105,7 @@ void teacher_givePerformance() {
             teacher_givePerformance();  
     }
 }
+
 
 
 void teacher_seeAttendence() {
@@ -216,16 +160,7 @@ void teacher_markAttendance() {
 
 
 
-
-
-
-
-
-
-
-
-
-
+//////////////////////////////////////////////// ADMIN SIDE///////////////////////////////////////////////////////////////
 
 
 void admin_createAccount() {
@@ -289,72 +224,154 @@ void admin_seePerformance() {
 }
 
 
-// void insertTeacherData(MYSQL *conn) {
-//     for (int i = 0; i < Vector_size(&teacher_username); i++) {
-//         char *username = teacher_username.data[i];
-//         char *password = teacher_password.data[i];
 
-//         char query[100];
-//         sprintf(query, "INSERT INTO teachers (username, password) VALUES ('%s', '%s')", username, password);
-
-//         if (mysql_query(conn, query)) {
-//             fprintf(stderr, "mysql_query() failed: %s\n", mysql_error(conn));
-//             mysql_close(conn);
-//             exit(1);
-//         }
-//     }
-// }
-
-// void insertStudentData(MYSQL *conn) {
-//     for (int i = 0; i < Vector_size(&student_username); i++) {
-//         char *username = student_username.data[i];
-//         char *password = student_password.data[i];
-
-//         char query[100];
-//         sprintf(query, "INSERT INTO students (username, password) VALUES ('%s', '%s')", username, password);
-
-//         if (mysql_query(conn, query)) {
-//             fprintf(stderr, "mysql_query() failed: %s\n", mysql_error(conn));
-//             mysql_close(conn);
-//             exit(1);
-//         }
-//     }
-// }
-
-// void insertAttendanceData(MYSQL *conn) {
-//     for (int i = 0; i < Vector_size(&attendence_date); i++) {
-//         char *student = attend_student.data[i];
-//         char *date = attendence_date.data[i];
-
-//         char query[100];
-//         sprintf(query, "INSERT INTO attendance (student, date) VALUES ('%s', '%s')", student, date);
-
-//         if (mysql_query(conn, query)) {
-//             fprintf(stderr, "mysql_query() failed: %s\n", mysql_error(conn));
-//             mysql_close(conn);
-//             exit(1);
-//         }
-//     }
-// }
-
-// void insertPerformanceData(MYSQL *conn) {
-//     char *performance[100];
-//     for (int i = 0; i < Vector_size(&performance); i++) {
-//         char *student = per_student.data[i];
-//         performance[i] = Vector_get(&performance, i);
-
-//         char query[100];
-//         sprintf(query, "INSERT INTO performance (student, performance) VALUES ('%s', '%s')", student, performance);
-
-//         if (mysql_query(conn, query)) {
-//             fprintf(stderr, "mysql_query() failed: %s\n", mysql_error(conn));
-//             mysql_close(conn);
-//             exit(1);
-//         }
-//     }
-// }
+void deleteteacheraccount() {
+    char n[20], pass[20];
+    printf("Enter name : ");
+    scanf("%s", n);
+    printf("Enter password : ");
+    scanf("%s", pass);
+    if(Vector_search(&teacher_username, n) != 1 && Vector_search(&teacher_username, n) == Vector_search(&teacher_password, pass)) {
+        Vector_erase_value(&teacher_username, n);
+        Vector_erase_value(&teacher_password, pass);
+    }
+}
 
 
+
+void deletestudentaccount() {
+    char n[20], pass[20];
+    printf("Enter name : ");
+    scanf("%s", n);
+    printf("Enter password : ");
+    scanf("%s", pass);
+    if(Vector_search(&student_username, n) != -1 && Vector_search(&student_password, pass) == Vector_search(&student_username, n)) {
+        Vector_erase_value(&student_username, n);
+        Vector_erase_value(&student_password, pass);
+    }
+}
+
+
+
+void teacher_list() {
+    for(int i = 0; i < Vector_size(&teacher_username); i++) {
+        printf(CYAN"%d.  %s    %s\n"RESET, i+1, teacher_username.data[i], teacher_password.data[i]);
+    }
+} 
+
+
+
+void student_list() {
+    for(int i = 0; i < Vector_size(&student_username); i++) {
+        printf(CYAN"%d.  %s    %s\n"RESET, i+1, student_username.data[i], student_password.data[i]);
+    }
+} 
+
+
+
+
+////////////////////////////////////////////////MYSQL SERVER FUNCTIONS/////////////////////////////////////////////////////
+
+MYSQL *db_connect() {
+    MYSQL *conn = mysql_init(NULL);
+    if (conn == NULL) {
+        fprintf(stderr, "mysql_init() failed\n");
+        exit(1);
+    }
+    if (mysql_real_connect(conn, DB_HOST, DB_USER, DB_PASS, DB_NAME, 0, NULL, 0) == NULL) {
+        fprintf(stderr, "mysql_real_connect() failed: %s\n", mysql_error(conn));
+        mysql_close(conn);
+        exit(1);
+    }
+    return conn;
+}
+
+void db_disconnect(MYSQL *conn) {
+    mysql_close(conn);
+}
+
+
+void insertTeacherData(MYSQL *conn) {
+    for (int i = 0; i < Vector_size(&teacher_username); i++) {
+        char *username = teacher_username.data[i];
+        char *password = teacher_password.data[i];
+
+        char query[100];
+        sprintf(query, "INSERT INTO teachers (username, password) VALUES ('%s', '%s')", username, password);
+
+        if (mysql_query(conn, query)) {
+            fprintf(stderr, "mysql_query() failed: %s\n", mysql_error(conn));
+            mysql_close(conn);
+            exit(1);
+        }
+    }
+}
+
+
+
+void insertStudentData(MYSQL *conn) {
+    for (int i = 0; i < Vector_size(&student_username); i++) {
+        char *username = student_username.data[i];
+        char *password = student_password.data[i];
+
+        char query[100];
+        sprintf(query, "INSERT INTO students (username, password) VALUES ('%s', '%s')", username, password);
+
+        if (mysql_query(conn, query)) {
+            fprintf(stderr, "mysql_query() failed: %s\n", mysql_error(conn));
+            mysql_close(conn);
+            exit(1);
+        }
+    }
+}
+
+void insertAttendanceData(MYSQL *conn) {
+    for (int i = 0; i < Vector_size(&attendence_date); i++) {
+        char *student = attend_student.data[i];
+        char *date = attendence_date.data[i];
+
+        char query[100];
+        sprintf(query, "INSERT INTO attendance (student, date) VALUES ('%s', '%s')", student, date);
+
+        if (mysql_query(conn, query)) {
+            fprintf(stderr, "mysql_query() failed: %s\n", mysql_error(conn));
+            mysql_close(conn);
+            exit(1);
+        }
+    }
+}
+
+void insertPerformanceData(MYSQL *conn) {
+    char *performance[100];
+    for (int i = 0; i < Vector_size(&performance); i++) {
+        char *student = per_student.data[i];
+        performance[i] = Vector_get(&performance, i);
+
+        char query[100];
+        sprintf(query, "INSERT INTO performance (student, performance) VALUES ('%s', '%s')", student, performance);
+
+        if (mysql_query(conn, query)) {
+            fprintf(stderr, "mysql_query() failed: %s\n", mysql_error(conn));
+            mysql_close(conn);
+            exit(1);
+        }
+    }
+}
+
+
+
+void saveDataToDatabase(MYSQL *conn) {
+    insertTeacherData(conn);
+    insertStudentData(conn);
+    // insertAttendanceData(conn);
+    // insertPerformanceData(conn);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////////CSV FILES GENERATOR//////////////////////////////////////////////////
 
 
 
@@ -422,25 +439,38 @@ void saveDataToCSV(const char *filename1, const char *filename2, const char *fil
 }
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 
 
+void UserGuideline()
+{
+    printf(GREEN "\n\t\t\t\t\t\t\t **** How it Works? ****\n\n" RESET);
+    printf(MAGENTA "For Admin \n" RESET);
+    printf(" -> You will only able to store the Student's Name, MIS.\n");
+    printf(" -> Student Name can be maximum 20 characters long.\n");
+    printf(" -> Student MIS is unique for every students.\n");
+    printf(" -> You can see Performance and Attendance of each Student\n");
+    printf(" -> You can create Teacher\'s account.\n");
+    printf(" -> You can delete the created account\n");
+    printf(MAGENTA "For Teachers \n" RESET);
+    printf(" -> You can mark as well as see the attendance of Students\n");
+    printf(" -> You can also give the performance record of Students\n");
+    printf(MAGENTA "For Students \n" RESET);
+    printf(" -> You can see your attendance\n");
+    printf(" -> You caqn see your previous performance record \n");
+}
 
-// void saveDataToDatabase(MYSQL *conn) {
-//     insertTeacherData(conn);
-//     insertStudentData(conn);
-//     // insertAttendanceData(conn);
-//     // insertPerformanceData(conn);
-// }
 
-
+/////////////////////////////////////////////////////////////MAIN FUNCTION/////////////////////////////////////////////////
 
 
 int main() {
     
-    //  MYSQL *conn = db_connect();
+    MYSQL *conn = db_connect();
+
     Init_vector(&teacher_username);
     Init_vector(&teacher_password);
     Init_vector(&student_username);
@@ -454,8 +484,14 @@ int main() {
     int choice;
     char user[30], pass[20];
 
+    printf("\n\n\n\n=================================================");
+    printf(YELLOW "WELCOME TO STUDENT MANAGEMENT SYSTEM" RESET);
+    printf("=======================================================\n\n");
+
+    UserGuideline();
+
     do {
-        printf(MAGENTA"\n\n\n\n\n\nEnter the type of account you want to log in:\n"RESET);
+        printf(MAGENTA"\n\n\n\n\nEnter the type of account you want to log in:\n"RESET);
         printf(CYAN"1. Admin\n2. Teacher\n3. Student \n4. Import data as CSV\n5. Exit\n"RESET);
         scanf("%d", &choice);
 
@@ -597,13 +633,13 @@ int main() {
                 break;
 
             case 4:
-            //  saveDataToDatabase(conn);
+                saveDataToDatabase(conn);
                 saveDataToCSV("Teacher_data.csv", "Studemt_data.csv", "Attendance.csv", "Performance.csv");
                 break;
 
             case 5:
                 printf(MAGENTA"Exiting...\n"RESET);
-                // db_disconnect(conn);
+                db_disconnect(conn);
                 break;
             default:
                 printf(RED"Invalid choice.\n"RESET);
