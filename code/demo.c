@@ -33,6 +33,10 @@ Vector performance;
 Vector per_student;
 Map *individual;
 
+//////////////////////////////////////////// Prototypes of Function //////////////////////////////////
+void deleteteacheraccount();
+void deletestudentaccount();
+void admin_seePerformance() ;
 
 void changepassword() {
 
@@ -43,12 +47,19 @@ void changepassword() {
     
 }
 
+void clear_input_buffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
 ////////////////////////////////////////////////////////STUDENT SIDE//////////////////////////////////////////////////////
 
 void studentaccount() {
     char n[20], pass[20];
     printf("Enter name : ");
-    scanf("%s", n);
+    clear_input_buffer();
+    fgets(n, sizeof(n), stdin);
+    n[strcspn(n, "\n")] = 0;
     printf("Enter password : ");
     scanf("%s", pass);
     Vector_push_back(&student_username, n);
@@ -75,7 +86,9 @@ void student_seeAttendence(char *s) {
 void teacheraccount() {
     char n[20], pass[20];
     printf("Enter name : ");
-    scanf("%s", n);
+    clear_input_buffer();
+    fgets(n, sizeof(n), stdin);
+    n[strcspn(n, "\n")] = 0;
     printf("Enter password : ");
     scanf("%s", pass);
     Vector_push_back(&teacher_username, n);
@@ -87,12 +100,17 @@ void teacheraccount() {
 void teacher_givePerformance() {
     printf("Enter student name : ");
     char s[30];
-    scanf("%s", s);
+    clear_input_buffer();
+    fgets(s, sizeof(s), stdin);
+    s[strcspn(s, "\n")] = 0;
+
 
     if(Vector_search(&student_username, s) != -1) {
         printf("Enter performance : ");
         char s2[30];
-        scanf("%s", s2);
+        clear_input_buffer();
+        fgets(s2, sizeof(s2), stdin);
+        s2[strcspn(s2, "\n")] = 0;
         Vector_push_back(&performance, s2);
         Vector_push_back(&per_student, s);
         map_insert(individual, s, s2);
@@ -128,7 +146,9 @@ void teacher_seePerformance() {
     if(num==1) {
         printf("Enter student name : ");
         char s[30];
-        scanf("%s", s);
+        clear_input_buffer();
+        fgets(s, sizeof(s), stdin);
+        s[strcspn(s, "\n")] = 0;
         printf(CYAN"Performance is : ");
         printf("%s\n"RESET, map_get(individual, s));
 
@@ -145,13 +165,17 @@ void teacher_seePerformance() {
 void teacher_markAttendance() {
     char date[10];
     printf(CYAN"Enter Date : "RESET);
-    scanf("%s", date);
+    clear_input_buffer();
+    fgets(date, sizeof(date), stdin);
+    date[strcspn(date, "\n")] = 0;;
     Vector_push_back(&attendence_date, date);
     int f = 1;
     while(f){
         printf(CYAN"Enter student name : "RESET);
         char s[30];
-        scanf("%s", s);
+        clear_input_buffer();
+        fgets(s, sizeof(s), stdin);
+        s[strcspn(s, "\n")] = 0;
         Vector_push_back(&attend_student, s);
         printf("press 1 to exit and 0 to continue\n");
         scanf("%d", &f);
@@ -228,7 +252,9 @@ void admin_seePerformance() {
 void deleteteacheraccount() {
     char n[20], pass[20];
     printf("Enter name : ");
-    scanf("%s", n);
+   clear_input_buffer();
+    fgets(n, sizeof(n), stdin);
+    n[strcspn(n, "\n")] = 0;
     printf("Enter password : ");
     scanf("%s", pass);
     if(Vector_search(&teacher_username, n) != 1 && Vector_search(&teacher_username, n) == Vector_search(&teacher_password, pass)) {
@@ -242,7 +268,9 @@ void deleteteacheraccount() {
 void deletestudentaccount() {
     char n[20], pass[20];
     printf("Enter name : ");
-    scanf("%s", n);
+    clear_input_buffer();
+    fgets(n, sizeof(n), stdin);
+    n[strcspn(n, "\n")] = 0;
     printf("Enter password : ");
     scanf("%s", pass);
     if(Vector_search(&student_username, n) != -1 && Vector_search(&student_password, pass) == Vector_search(&student_username, n)) {
@@ -342,13 +370,13 @@ void insertAttendanceData(MYSQL *conn) {
 }
 
 void insertPerformanceData(MYSQL *conn) {
-    char *performance[100];
+    char *perf[100];
     for (int i = 0; i < Vector_size(&performance); i++) {
         char *student = per_student.data[i];
-        performance[i] = Vector_get(&performance, i);
+        perf[i] = Vector_at(&performance, i);
 
         char query[100];
-        sprintf(query, "INSERT INTO performance (student, performance) VALUES ('%s', '%s')", student, performance);
+        sprintf(query, "INSERT INTO performance (student, performance) VALUES ('%s', '%s')", student, perf[i]);
 
         if (mysql_query(conn, query)) {
             fprintf(stderr, "mysql_query() failed: %s\n", mysql_error(conn));
@@ -499,7 +527,9 @@ int main() {
 
             case 1:
                 printf(BLUE "Enter username: " RESET);
-                scanf("%s", user);
+                clear_input_buffer();
+                fgets(user, sizeof(user), stdin);
+                user[strcspn(user, "\n")] = 0;
                 printf(BLUE"Enter password: "RESET);
                 scanf("%s", pass);
                 if (strcmp(username, user) == 0 && strcmp(password, pass) == 0) {
@@ -561,8 +591,10 @@ int main() {
                 break;
 
             case 2:
-                printf(BLUE"Enter username: "RESET);
-                scanf("%s", user);
+                clear_input_buffer();
+                printf(BLUE "Enter username: " RESET);
+                fgets(user, sizeof(user), stdin);
+                user[strcspn(user, "\n")] = 0;
                 printf(BLUE"Enter password: "RESET);
                 scanf("%s", pass);
                 if(Vector_search(&teacher_username, user) != -1 && Vector_search(&teacher_password, pass) == Vector_search(&teacher_username, user)) {
@@ -601,8 +633,10 @@ int main() {
 
             case 3:
                 // Student login
-                printf(BLUE"Enter username: "RESET);
-                scanf("%s", user);
+               clear_input_buffer();
+                printf(BLUE "Enter username: " RESET);
+                fgets(user, sizeof(user), stdin);
+                user[strcspn(user, "\n")] = 0;
                 printf(BLUE"Enter password: "RESET);
                 scanf("%s", pass);
                 
