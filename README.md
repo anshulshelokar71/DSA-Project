@@ -70,9 +70,15 @@ to compile just go to project directory and run the make command
 
     ```
 
-<!-- ## Screenshots
+## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here) -->
+![App Screenshot](fileStruct.png)
+
+![ss1]()
+
+![ss2]()
+![ss3]()
+![ss4]()
 
 
 
